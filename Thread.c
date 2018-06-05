@@ -11,7 +11,7 @@
 #include "Thread.h"
 
 /* Definitions what depend on hardware */
-#ifdef __AVR_ARCH__ > 6
+#if __AVR_ARCH__ > 6
 #error "Microcontroller architecture dooes not supported by this solution! "
 #endif
 
@@ -54,28 +54,29 @@
 
 #ifdef __AVR_HAVE_RAMPZ__
 #define __PUSH_RAMPZ__\
-	"\t in r24,RAMPZ"	"\n"\
+	"\t in r24,__RAMPZ__"	"\n"\
 	"\t push r24"		"\n"
   
 #define __POP_RAMPZ__\
 	"\t pop r24"		"\n"\
-	"\t out RAMPZ,r24"	"\n"
+	"\t out __RAMPZ__,r24"	"\n"
 #else
 #define __PUSH_RAMPZ__
 #define __POP_RAMPZ__
 #endif
 
-#ifdef EIND
+#if    defined(EIND)
 #define __PUSH_EIND__\
-	"\t in r24,EIND"	"\n"\
+	"__EIND__ = 0x3C"	"\n"\
+	"\t in r24,__EIND__"	"\n"\
 	"\t push r24"		"\n"
   
 #define __POP_EIND__\
 	"\t pop r24"		"\n"\
-	"\t out EIND,r24"	"\n"
+	"\t out __EIND__,r24"	"\n"
 #else
-#define __PUSH_RAMPD__
-#define __POP_RAMPD__
+#define __PUSH_EIND__
+#define __POP_EIND__
 #endif
   
 __attribute__ ((signal, naked, used, externally_visible))
