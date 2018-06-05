@@ -11,6 +11,9 @@
 #include "Thread.h"
 
 /* Definitions what depend on hardware */
+#ifdef __AVR_ARCH__ > 6
+#error "Microcontroller architecture dooes not supported by this solution! "
+#endif
 
 #define QUANTUM_VECTOR	TIMER0_COMPB_vect
 #define QUANTUM_VALUE	250
@@ -51,51 +54,25 @@
 
 #ifdef __AVR_HAVE_RAMPZ__
 #define __PUSH_RAMPZ__\
-	"\t in r24,__RAMPZ__"	"\n"\
+	"\t in r24,RAMPZ"	"\n"\
 	"\t push r24"		"\n"
   
 #define __POP_RAMPZ__\
 	"\t pop r24"		"\n"\
-	"\t out __RAMPZ__,r24"	"\n"
+	"\t out RAMPZ,r24"	"\n"
 #else
 #define __PUSH_RAMPZ__
 #define __POP_RAMPZ__
 #endif
 
-#ifdef __AVR_HAVE_RAMPY__
-#define __PUSH_RAMPY__\
-	"\t in r24,__RAMPY__"	"\n"\
+#ifdef EIND
+#define __PUSH_EIND__\
+	"\t in r24,EIND"	"\n"\
 	"\t push r24"		"\n"
   
-#define __POP_RAMPY__\
+#define __POP_EIND__\
 	"\t pop r24"		"\n"\
-	"\t out __RAMPY__,r24"	"\n"
-#else
-#define __PUSH_RAMPY__
-#define __POP_RAMPY__
-#endif
-
-#ifdef __AVR_HAVE_RAMPX__
-#define __PUSH_RAMPX__\
-	"\t in r24,__RAMPX__"	"\n"\
-	"\t push r24"		"\n"
-  
-#define __POP_RAMPX__\
-	"\t pop r24"		"\n"\
-	"\t out __RAMPX__,r24"	"\n"
-#else
-#define __PUSH_RAMPX__
-#define __POP_RAMPX__
-#endif
-
-#ifdef __AVR_HAVE_RAMPD__
-#define __PUSH_RAMPD__\
-	"\t in r24,__RAMPD__"	"\n"\
-	"\t push r24"		"\n"
-  
-#define __POP_RAMPD__\
-	"\t pop r24"		"\n"\
-	"\t out __RAMPD__,r24"	"\n"
+	"\t out EIND,r24"	"\n"
 #else
 #define __PUSH_RAMPD__
 #define __POP_RAMPD__
@@ -122,9 +99,7 @@ void QUANTUM_VECTOR (void)
 	"\t push r27"		"\n"
 	"\t push r30"		"\n"
 	"\t push r31"		"\n"
-	__PUSH_RAMPD__
-	__PUSH_RAMPX__
-	__PUSH_RAMPY__
+	__PUSH_EIND__
 	__PUSH_RAMPZ__
 	"\t rcall .L03"		"\n"
 	"\t cli"		"\n"
@@ -133,9 +108,7 @@ void QUANTUM_VECTOR (void)
 
   __asm__ (
 	__POP_RAMPZ__
-	__POP_RAMPY__
-	__POP_RAMPX__
-	__POP_RAMPD__
+	__POP_EIND__
 	"\t pop r31"		"\n"
 	"\t pop r30"		"\n"
 	"\t pop r27"		"\n"
