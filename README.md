@@ -1,6 +1,7 @@
 # Thread
 
 It is simplest implementation of iterative multithredaing for AVR8 microcontrollers.
+      You can install this library by the library manager Arduino also. 
 
 Using
 -----
